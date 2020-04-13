@@ -1,0 +1,7 @@
+{
+  "name": "Figma Duplicate",
+  "id": "831539650199167179",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html"
+}
