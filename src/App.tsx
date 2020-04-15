@@ -70,6 +70,10 @@ const numberOfElementsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const TextInputCell = styled.div`
   display: flex;
   flex-direction: column;
+  max-width: 180px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const TextInputLabel = styled.label`

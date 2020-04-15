@@ -1,5 +1,5 @@
 figma.showUI(__html__, {
-  width: 480,
+  width: 600,
   height: 320,
 });
 
@@ -36,26 +36,26 @@ if (!!(selectedNode as any).findAll) {
 }
 
 // when cloning element, IDs of decendants also change
+// This function is to create map for text node ids between original and clone
 function createIdMap(
   node: GroupNode,
-  cloneNode: GroupNode,
-  textNodeIds: string[]
+  cloneNode: GroupNode
 ) {
-  const indexes = [];
+  const originalTextNodes = (node as GroupNode).findAll(
+    (node) => node.type === 'TEXT'
+  ) as TextNode[];
 
-  node.children.forEach((node, index) => {
-    if (textNodeIds.indexOf(node.id) > -1) {
-      indexes.push(index);
-    }
-  });
+  const cloneTextNodes = (cloneNode as GroupNode).findAll(
+    (node) => node.type === 'TEXT'
+  ) as TextNode[];
 
-  return indexes.reduce(
-    (prev, current) => ({
-      ...prev,
-      [node.children[current].id]: cloneNode.children[current].id,
-    }),
-    {}
-  );
+  const idMap = {}
+
+  // This is based on an assumption that order of items when findAll is same at every execution
+  originalTextNodes.forEach((_node, index) => {
+    idMap[_node.id]= cloneTextNodes[index].id
+  })
+  return idMap
 }
 
 figma.ui.onmessage = async (message) => {
@@ -66,8 +66,7 @@ figma.ui.onmessage = async (message) => {
       const clone = selectedNode.clone() as GroupNode;
       const map = createIdMap(
         selectedNode as GroupNode,
-        clone,
-        Object.keys(texts)
+        clone
       );
 
       Object.keys(texts).forEach(async (key) => {
